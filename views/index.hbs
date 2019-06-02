@@ -1,0 +1,56 @@
+<h1>Viajes Ajes</h1>
+<p>viaje con nosotros a sitios recónditos</p>
+{{#if NuevoUser}}
+
+<h3>Bienvenido  {{NuevoUser.nombre}}</h3>
+
+{{else}}
+<div class="container-fluid">
+<form class="form-inline" method="POST" action="">
+  <div class="form-group mb-2">
+    <label for="staticEmail2" class="sr-only">Email</label>
+    <input name="email" type="text" class="form-control-plaintext" id="staticEmail2" value="email@example.com" >
+    <p id="aviso"></p>
+  </div>
+  <div class="form-group mx-sm-3 mb-2">
+    <label for="inputPassword2" class="sr-only">Password</label>
+    <input "password" type="password" class="form-control" id="inputPassword2" placeholder="Password">
+  </div>
+  <button type="submit" class="btn btn-primary mb-2">Log in</button>
+<a style="margin-left:3em;" href="/form" >regístrate</a>
+</form>
+</div>
+{{/if}}
+
+
+
+<div class="container-fluid">
+    <div class="row">
+
+        {{#each viajes}}
+      <a> 
+     <div class= "col">
+
+
+            <div class="card" style="width: 18rem;">
+                     <img src="{{imagen}}" class="card-img-top" alt="...">
+                 <div class="card-body">
+                       <h3>{{destino}}</h3>
+                     <p class="card-text">Precio : {{precio}} $ </br>  Fecha de Salida : {{fechaSalida}}</p>
+                      {{#if descuento}}
+
+                    <p class="card-text">Ahora con un {{descuento}} % de descuento </p>  
+
+                     {{/if}}
+                </div>
+           </div>
+ 
+
+
+    </div>
+    </a>
+       {{/each}}
+
+    </div>
+</div>
+<!--hacer el usuario login o reenvio al formulario.hbs   -->
