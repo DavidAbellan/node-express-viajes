@@ -7,7 +7,10 @@ module.exports =(sequelize,dataTypes) => {
     password : dataTypes.STRING,
     direccion: dataTypes.STRING,
     telefono : dataTypes.INTEGER,
-    ciudad : dataTypes.STRING
+    ciudad : dataTypes.STRING,
+    administrador : dataTypes.BOOLEAN,
+    
+    
 
 
 

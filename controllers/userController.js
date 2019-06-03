@@ -26,8 +26,10 @@ function desencriptar(pass,password){
 }
 async function recuperaUser (e,p){
   let password = await recuperaMail(e);
+  
+  if (password.length > 0){
   let pass = await desencriptar(p,password[0].password); 
-   
+  
    
  if(pass){
      
@@ -38,7 +40,7 @@ async function recuperaUser (e,p){
       password :  password[0].password,
     }
    
-  })} 
+  })} }
 }
 
 

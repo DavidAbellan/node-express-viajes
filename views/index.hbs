@@ -1,13 +1,14 @@
 <h1>Viajes Ajes</h1>
-<p>viaje con nosotros a sitios recónditos</p>
+  <p>viaje con nosotros a sitios recónditos</p>
 {{#if existe}}
-<p>El email ya está registrado</p>
-
+  <p>El email ya está registrado</p>
 {{/if}}  
 {{#if NuevoUser}}
-
-<h3>Bienvenido  {{NuevoUser.nombre}}</h3>
-
+   <h3>Bienvenido  {{NuevoUser.nombre}}</h3>
+   {{#if NuevoUser.administrador}}
+       <button>Insertar Viajes</button>
+       <button>Editar Viajes</button>
+   {{/if}}
 {{else}}
 <div class="container-fluid">
 <form class="form-inline" method="POST" action="/users/login">
