@@ -33,16 +33,18 @@ router.post('/form', async function (req, res) {
 })
 
 router.post('/login', async function (rq, rs) {
+ 
   let viajes = await viajContr.recuperaViajes();
-  let NuevoUser = await userContr.recuperaUser(rq.body.email, rq.body.password);
-  if (!NuevoUser[0]){
+  let NuevoUser;
+   NuevoUser = await userContr.recuperaUser(rq.body.email, rq.body.password);
+  console.log('nuevouser : ',NuevoUser)
+  if (NuevoUser === undefined){
       rs.send ('No existe el usuario'); 
          
   } else {
-    NuevoUser = NuevoUser[0];
     
     rs.render('index', {
-      NuevoUser,  
+      NuevoUser : NuevoUser[0],
       viajes
     })
  }
