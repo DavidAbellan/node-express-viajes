@@ -6,7 +6,7 @@
 {{#if NuevoUser}}
    <h3>Bienvenido  {{NuevoUser.nombre}}</h3>
    {{#if NuevoUser.administrador}}
-       <button>Insertar Viajes</button>
+       <a href="/users/admin"><button>Insertar Viajes</button></a>
        <button>Editar Viajes</button>
    {{/if}}
 {{else}}
@@ -34,7 +34,7 @@
 
         {{#each viajes}}
       
-     <div class= "col 3 col-xs-12">
+     <div class= "col-4 col-xs-12">
 
 
             <div class="card" >

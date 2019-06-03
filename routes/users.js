@@ -50,5 +50,17 @@ router.post('/login', async function (rq, rs) {
  }
 })
 
+router.get('/admin',(req,res)=>{
+     res.render('insertaViaje');
+  
+})
 
+router.post('/admin/insert',async function (req,res) {
+ await viajContr.insertaViaje(req.body);
+ let viajes = await viajContr.recuperaViajes();
+ res.render('index',{
+   viajes
+ });
+
+})
 module.exports = router;

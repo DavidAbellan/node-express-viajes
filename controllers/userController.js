@@ -16,7 +16,7 @@ function desencriptar(pass,password){
     return cript.compare(pass,password);////// el compare funciona con la contrasena de usuario, encriptada
  }                             ///// devuelve booleano
 
- async function recuperaMail (mail) {
+async function recuperaMail (mail) {
      
    return await mod.user.findAll({
       where: {
@@ -25,23 +25,18 @@ function desencriptar(pass,password){
    })
 }
 async function recuperaUser (e,p){
-  let password = await recuperaMail(e);
+    let password = await recuperaMail(e);
   
-  if (password.length > 0){
-  let pass = await desencriptar(p,password[0].password); 
-  
+    if (password.length > 0){
+        let pass = await desencriptar(p,password[0].password); 
+               if(pass){
+                  return await mod.user.findAll({
+                               where:{
+                               email : e,
+                               password :  password[0].password,
+                                                                }
    
- if(pass){
-     
-     
-  return await mod.user.findAll({
-   where:{
-      email : e,
-      password :  password[0].password,
-    }
-   
-  })} }
-}
+})} }}
 
 
 
