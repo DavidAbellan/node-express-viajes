@@ -1,12 +1,52 @@
 var express = require('express');
 var router = express.Router();
-var useContr = require('../controllers/userController')
+var userContr = require('../controllers/userController')
+var viajContr = require('../controllers/viajeController')
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+router.get('/form', function (req, res) {
+  res.render('formulario');
+})
 
+router.post('/form', async function (req, res) {
+  
+  let viajes = await viajContr.recuperaViajes();
+  let coincidencia = await userContr.recuperaMail(req.body.email);
+  
+  if (!coincidencia[0] ) {
+    let NuevoUser = await userContr.insertaUsuario(req.body);
+   
+    
+    
+    res.render('index', {
+      NuevoUser,
+      viajes
+    })
+  } else {
+    let existe = true;
+    res.render('index', {
+      viajes,
+      existe
+    }
+    )
+  }
+})
+
+router.post('/login', async function (rq, rs) {
+  let viajes = await viajContr.recuperaViajes();
+  let NuevoUser = await userContr.recuperaUser(rq.body.email, rq.body.password);
+  if (!NuevoUser[0]){
+      rs.send ('No existe el usuario'); 
+         
+  } else {
+    NuevoUser = NuevoUser[0];
+    
+    rs.render('index', {
+      NuevoUser,  
+      viajes
+    })
+ }
+})
 
 
 module.exports = router;

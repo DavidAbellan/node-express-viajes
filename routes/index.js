@@ -13,19 +13,7 @@ router.get('/',async function(req, res, next) {
   });
 });
 
-router.get('/form',function(req,res){
-     res.render('formulario');
-} )
 
- router.post ('/form',async function(req,res){
-  let NuevoUser = await userContr.insertaUsuario(req.body);
-  let viajes = await viajContr.recuperaViajes();
-    res.render('index',{
-      NuevoUser,
-     viajes
-   }) 
-   
-} ) 
 
 
 
