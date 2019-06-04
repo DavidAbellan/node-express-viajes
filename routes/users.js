@@ -2,14 +2,17 @@ var express = require('express');
 var router = express.Router();
 var userContr = require('../controllers/userController')
 var viajContr = require('../controllers/viajeController')
+var flash = require('connect-flash');
 
 /* GET users listing. */
 router.get('/form', function (req, res) {
   //leer sesion flash
- /*  let error = req.flash('error','el usuario ya existe') */
+  let error = req.flash('error') 
 
   // pasar flash al render
-  res.render('formulario');
+  res.render('formulario',{
+    error
+  });
 })
 
 router.post('/form', async function (req, res) {
@@ -28,13 +31,13 @@ router.post('/form', async function (req, res) {
   } else {
     
     //definir flash
-/*     req.flash(error);
- */    res.redirect('/users/form');
+   req.flash('error','el usuario ya existe');
+   res.redirect('/users/form');
   }
 })
 
 router.post('/login', async function (rq, rs) {
-
+ 
   let viajes = await viajContr.recuperaViajes();
   let mail = rq.body.email;
   let pass = rq.body.password;
@@ -42,7 +45,8 @@ router.post('/login', async function (rq, rs) {
   let NuevoUser;
   NuevoUser = await userContr.recuperaUser(rq.body.email, rq.body.password);
   if (NuevoUser === undefined) {
-    rs.send('No existe el usuario');
+   
+    rs.redirect('/');
 
   } else {
     rq.session.email = mail;
@@ -55,6 +59,7 @@ router.post('/login', async function (rq, rs) {
       viajes
     })
   }
+    
 })
 
 router.get('/admin', (req, res) => {
