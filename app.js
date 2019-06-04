@@ -2,23 +2,26 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
+var session = require('express-session')
 var logger = require('morgan');
 let hbs = require('hbs');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-/* var sesion = require('express-session')
- */
+var flash = require('connect-flash');
+ 
 
 
 var app = express();
 
-/* app.use(sesion,{
+ app.use(session({
   secret:'nombredelacookie',
   name: 'super-secret-nombre',
   resave:true,
   saveUninitialized:true
 
-}) */
+}))
+
+app.use(flash());
 
 
 hbs.registerPartials(__dirname + '/views/partials')
