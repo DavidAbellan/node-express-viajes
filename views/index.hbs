@@ -27,18 +27,18 @@
 </form>
 </div>
 {{/if}}
-
+  <!-- crear la sesion desde formulario-->
 
 
 <div class="container-fluid">
     <div class="row">
 
-        {{#each viajes}}
+        {{#each formatoViaje}}
       
      <div class= "col-4 col-xs-12">
 
-
-            <div class="card" >
+            <a href="/users/{{id}}" style="text-decoration: none"> 
+            <div class="card"  >
                      <img src="{{imagen}}" class=" card-img-top  img-fluid" alt="...">
                  <div class="card-body">
                        <h3>{{destino}}</h3>
@@ -54,9 +54,8 @@
 
 
     </div>
-  
+      </a>
        {{/each}}
 
     </div>
 </div>
-<!--hacer el usuario login o reenvio al formulario.hbs   -->
