@@ -32,11 +32,11 @@
 
 <div class="container-fluid">
     <div class="row">
-
-        {{#each formatoViaje}}
+       
+        {{#each viajes}}
       
      <div class= "col-4 col-xs-12">
-
+             
             <a href="/users/{{id}}" style="text-decoration: none"> 
             <div class="card"  >
                      <img src="{{imagen}}" class=" card-img-top  img-fluid" alt="...">
@@ -48,6 +48,7 @@
                         <p class="card-text">Ahora con un {{descuento}} % de descuento </p>  
 
                      {{/if}}
+                     
                 </div>
            </div>
  

@@ -1,3 +1,5 @@
+
+{{#if formatoViaje}}
 {{#with formatoViaje}}
 
 <div class="card bg-dark text-white">
@@ -9,4 +11,17 @@
   </div>
 </div>
 
+{{/with}}
+
+{{#else}}
+{{#with viaje}}
+
+<div class="card bg-dark text-white">
+  <img src="{{imagen}}" class="card-img" alt="...">
+  <div class="card-img-overlay">
+    <h5 class="card-title">{{destino}}</h5>
+    <p class="card-text">Salimos el {{fechaSalida}} y volvemos {{fechaVuelta}} </p>
+    <p class="card-text">Precio {{precio}} con {{descuento}}% de descuento</p>
+  </div>
+</div>
 {{/with}}
