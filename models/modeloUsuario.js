@@ -9,13 +9,10 @@ module.exports =(sequelize,dataTypes) => {
     telefono : dataTypes.INTEGER,
     ciudad : dataTypes.STRING,
     administrador : dataTypes.BOOLEAN,
+    activate :{type: dataTypes.BOOLEAN, defaultValue: false},
     
-    
-
-
-
-
-    })
+   })
+   
 
 return usuario;
 }
