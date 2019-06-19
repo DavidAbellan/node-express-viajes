@@ -3,9 +3,10 @@ var router = express.Router();
 let email = require('../config/emailConf');
 let path = require('path');
 let hbs =  require('nodemailer-express-handlebars');
-var confirm = require('../controllers/confirmController')
-var userContr = require('../controllers/userController')
-var viajContr = require('../controllers/viajeController')
+var confirm = require('../controllers/confirmController');
+var userContr = require('../controllers/userController');
+var viajContr = require('../controllers/viajeController');
+var upload = require('../config/multer');
 var flash = require('connect-flash');
 var moment = require('moment');
 
@@ -115,12 +116,12 @@ router.get('/admin', (req, res) => {
 
 })
 
-router.post('/admin/insert', async function (req, res) {
+router.post('/admin/insert',upload.single('file'), async function (req, res) {
   await viajContr.insertaViaje(req.body);
-  let viajes = await viajContr.recuperaViajes();
-  res.render('index', {
-    viajes
-  });
+  if(!req.file) {
+    return res.status(500).send('No has seleccionado un archivo valido');
+  }
+  res.redirect('/')
 
 })
 

@@ -1,14 +1,14 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
-            <form method="POST" action="/users/admin/insert">
+            <form method="POST" action="/users/admin/insert" enctype="multipart/form-data">
             <input name="destino" class="form-control" type="text" placeholder="Destino">
             <input name="precio" class="form-control" type="text" placeholder="Precio">
             <input name="descuento" class="form-control" type="text" placeholder="Descuento">
             <input name="fechaSalida" class="form-control" type="text" placeholder="Fecha de Salida">
             <input name="fechaVuelta" class="form-control" type="text" placeholder="Fecha de Vuelta">
-            <input name="imagen" class="form-control" type="text" placeholder="url de imagen">
-            <button type="submit">Inserta Viaje</button>   
+            <input name="file" class="form-control" type="file" placeholder="url de imagen">
+            <button type="submit" value="submit">Inserta Viaje</button>   
              </form>
         </div>
     </div>
