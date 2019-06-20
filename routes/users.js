@@ -6,6 +6,7 @@ let hbs =  require('nodemailer-express-handlebars');
 var confirm = require('../controllers/confirmController');
 var userContr = require('../controllers/userController');
 var viajContr = require('../controllers/viajeController');
+var imgContr = require('../controllers/imageController');
 var upload = require('../config/multer');
 var flash = require('connect-flash');
 var moment = require('moment');
@@ -13,7 +14,7 @@ var moment = require('moment');
 /* GET users listing. */
 router.get('/form', function (req, res) {
   //leer sesion flash
-  let error = req.flash('error')
+ let error = req.flash('error')
 
   // pasar flash al render
   res.render('formulario', {
@@ -24,6 +25,7 @@ router.get('/form', function (req, res) {
 router.post('/form', async function (req, res) {
 
   let coincidencia = await userContr.recuperaMail(req.body.email);
+  let ruta = 'http://localhost:3000/users/activate/now/';
 
   if (coincidencia.length == 0) {
     let NuevoUser = await userContr.insertaUsuario(req.body);
@@ -34,7 +36,8 @@ router.post('/form', async function (req, res) {
     req.session.password = NuevoUser.password;
     req.session.nombre = NuevoUser.nombre;
 
-    hash =  (confirm.confirma(NuevoUser.id));
+    hash = await  confirm.confirma(NuevoUser.id);
+   
 
     
 
@@ -52,19 +55,17 @@ router.post('/form', async function (req, res) {
     },))
 
     let message = {
-      to: 'Owax90@gmail.COM',
+      to: 'BarryelSucio@gmail.COM',
       subject : 'Hola  ' + NuevoUser.nombre,
       template : 'mail',
       context : {
         empresa : 'Viajes Ajes',
-        copyright: 'Este correo es confidencial o no',
-        confirmacion :'<a>' + hash + '</a>'
+        copyright: 'Este correo es confidencial, muy confidencial',
+        confirmacion : ruta + hash.hash 
       }
      
     }
     email.transporter.sendMail(message);
-
-    
     res.redirect('/')
   } else {
 
@@ -116,12 +117,55 @@ router.get('/admin', (req, res) => {
 
 })
 
-router.post('/admin/insert',upload.single('file'), async function (req, res) {
-  await viajContr.insertaViaje(req.body);
-  if(!req.file) {
+router.post('/admin/insert',upload.array('file',10), async function (req, res) {
+  if(!req.files) {
     return res.status(500).send('No has seleccionado un archivo valido');
+
   }
+      let travel = req.body ;
+      travel.imagen = req.files[0].filename
+      let viaje = await viajContr.insertaViaje(travel);
+      let idviaje = viaje.id;
+      await imgContr.insertarImagenes(req.files,idviaje);
+      
+  
   res.redirect('/')
+
+})
+router.get('/activate/now/:hash', async function (req,res) {
+  let hash = await confirm.existe(req.params.hash);
+  
+  if (hash === undefined){
+    let error= req.flash(error);
+    res.redirect('/');
+    
+
+  } else {
+    let NuevoUser = await userContr.recuperaUserPorId(hash.userId);
+    let viajes = await viajContr.recuperaViajes();
+    
+    req.session.email = NuevoUser.email;
+    req.session.password = NuevoUser.password;
+    req.session.nombre = NuevoUser.nombre;
+
+    let formatoViaje = viajes
+    formatoViaje.map(a => {
+      return {
+        destino: a.destino,
+        imagen: a.imagen,
+        precio: a.precio,
+        descuento: a.descuento,
+        fechaSalida: moment(a.fechaSalida).subtract(10, 'days').calendar()
+      }
+    })
+
+    res.render('index', {
+      NuevoUser,
+      formatoViaje
+    }) ;
+
+
+  }
 
 })
 

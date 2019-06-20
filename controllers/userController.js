@@ -38,9 +38,14 @@ async function recuperaUser (e,p){
    
 })} }}
 
+async function recuperaUserPorId(id){
+   return await mod.user.findOne({where:{id}} );
+}
+
 
 
 module.exports = {
+     recuperaUserPorId,
      recuperaMail,
      insertaUsuario,
      recuperaUser
