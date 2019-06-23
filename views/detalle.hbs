@@ -1,12 +1,28 @@
-
+ <script>
+    $('.carousel').carousel()
+ </script>
 <div class="card bg-dark text-white">
 {{#with formatoViaje}}
-  <img src="{{imagen}}" class="card-img" alt="...">
   <div class="card-img-overlay">
     <h5 class="card-title">{{destino}}</h5>
-    <p class="card-text">Salimos el {{fechaSalida}} y volvemos {{fechaVuelta}} </p>
-    <p class="card-text">Precio {{precio}} con {{descuento}}% de descuento</p>
-  </div>
-</div>
+       {{!--  falta el archivo util.js --}}
+
+      <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+          <div class="carousel-inner">
+            {{#each imagenes}}
+
+               <div class="carousel-item active">
+                  <img src={{images}} class="d-block w-100" alt="...">
+               </div>
+            {{/each}}
+    
+          </div>
+     </div>
+
+    </div>   
+      <p class="card-text">Salimos el {{fechaSalida}} y volvemos {{fechaVuelta}} </p>
+      <p class="card-text">Precio {{precio}} con {{descuento}}% de descuento</p>
+    </div>
+ </div>
 
 {{/with}}

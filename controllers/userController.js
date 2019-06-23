@@ -42,9 +42,29 @@ async function recuperaUserPorId(id){
    return await mod.user.findOne({where:{id}} );
 }
 
+async function devuelveUsuarios(){
+   return await mod.user.findAll();
+}
+async function borraUsuario(userId){
+   await mod.user.destroy({where:{id : userId}});
+}
+async function actualizaPassword(user,nuevoPassword){
+   console.log('USERERERERER:',user);
+   console.log('newPAss ; ',nuevoPassword);
 
+   let newPass = await encriptar(''+nuevoPassword)
+   console.log('newPAss ; ',newPass);
+   await mod.user.update( {password:newPass},
+                          {where:{ id : user.id}}
+                     );
+
+}
 
 module.exports = {
+
+     actualizaPassword,  
+     borraUsuario,
+     devuelveUsuarios,
      recuperaUserPorId,
      recuperaMail,
      insertaUsuario,

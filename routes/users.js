@@ -1,15 +1,13 @@
 var express = require('express');
 var router = express.Router();
-let email = require('../config/emailConf');
-let path = require('path');
-let hbs =  require('nodemailer-express-handlebars');
 var confirm = require('../controllers/confirmController');
 var userContr = require('../controllers/userController');
 var viajContr = require('../controllers/viajeController');
-var imgContr = require('../controllers/imageController');
-var upload = require('../config/multer');
+var emailContr = require('../controllers/emailController');
 var flash = require('connect-flash');
 var moment = require('moment');
+var loginMid = require('../middleware/Logged')
+const RUTA = 'http://localhost:3000/'
 
 /* GET users listing. */
 router.get('/form', function (req, res) {
@@ -25,47 +23,14 @@ router.get('/form', function (req, res) {
 router.post('/form', async function (req, res) {
 
   let coincidencia = await userContr.recuperaMail(req.body.email);
-  let ruta = 'http://localhost:3000/users/activate/now/';
 
   if (coincidencia.length == 0) {
     let NuevoUser = await userContr.insertaUsuario(req.body);
-    let hash;
-
-   
+    let hash = await confirm.confirma(NuevoUser.id);
     req.session.email = NuevoUser.email;
     req.session.password = NuevoUser.password;
     req.session.nombre = NuevoUser.nombre;
-
-    hash = await  confirm.confirma(NuevoUser.id);
-   
-
-    
-
-    email.transporter.use('compile',hbs ({
-      viewEngine : {
-        extName: '.hbs',
-        partialsDir: {__dirname}  + '/../views/templates',
-        layoutsDir: {__dirname}  + '/../views/layout',
-        defaultLayout : 'cabeceraMail.hbs'
-      },
-        extName:'.hbs',
-        viewPath : path.join( __dirname,'/../views/templates')
-
-
-    },))
-
-    let message = {
-      to: 'BarryelSucio@gmail.COM',
-      subject : 'Hola  ' + NuevoUser.nombre,
-      template : 'mail',
-      context : {
-        empresa : 'Viajes Ajes',
-        copyright: 'Este correo es confidencial, muy confidencial',
-        confirmacion : ruta + hash.hash 
-      }
-     
-    }
-    email.transporter.sendMail(message);
+    await emailContr.emailConfirmacion(NuevoUser,hash);
     res.redirect('/')
   } else {
 
@@ -76,16 +41,15 @@ router.post('/form', async function (req, res) {
 })
 
 
-router.post('/login', async function (rq, rs) {
+router.post('/login',  async function (rq, rs) {
 
   let viajes = await viajContr.recuperaViajes();
   let mail = rq.body.email;
   let pass = rq.body.password;
-  let formatoViaje = viajes
-  formatoViaje.map(a => {
+  let formatoViaje = viajes.map(a => {
     return {
       destino: a.destino,
-      imagen: a.imagen,
+      imagen: RUTA + a.imagen,
       precio: a.precio,
       descuento: a.descuento,
       fechaSalida: moment(a.fechaSalida).subtract(10, 'days').calendar()
@@ -103,7 +67,6 @@ router.post('/login', async function (rq, rs) {
     rq.session.password = pass;
     rq.session.nombre = NuevoUser[0].nombre;
 
-
     rs.render('index', {
       NuevoUser: NuevoUser[0],
       formatoViaje
@@ -112,26 +75,34 @@ router.post('/login', async function (rq, rs) {
 
 })
 
-router.get('/admin', (req, res) => {
-  res.render('insertaViaje');
+router.get('/logoff', async function(req,res){
+  req.flash('success_msg', 'Vuelve Pronto')
+   req.session.destroy(function (err) {
+       if (err) {
+           res.send(err)
+       }
 
+       res.redirect('/')
+   })
 })
 
-router.post('/admin/insert',upload.array('file',10), async function (req, res) {
-  if(!req.files) {
-    return res.status(500).send('No has seleccionado un archivo valido');
+router.get('/forgot', function(req,res){
+  res.render('password');
+})
+router.post('/sendpass', async function(req,res){
+  let user = await userContr.recuperaMail(req.body.email);
+  if (user === undefined){
+    req.flash('error', 'el usuario no existe');
 
+  } else {
+    emailContr.enviarIdaMail(user)
+    console.warn('hecho!', 'Se ha enviado un correo con tu password a' + req.body.email)
+    res.redirect('/')
   }
-      let travel = req.body ;
-      travel.imagen = req.files[0].filename
-      let viaje = await viajContr.insertaViaje(travel);
-      let idviaje = viaje.id;
-      await imgContr.insertarImagenes(req.files,idviaje);
-      
-  
-  res.redirect('/')
-
 })
+
+
+
 router.get('/activate/now/:hash', async function (req,res) {
   let hash = await confirm.existe(req.params.hash);
   
@@ -139,27 +110,24 @@ router.get('/activate/now/:hash', async function (req,res) {
     let error= req.flash(error);
     res.redirect('/');
     
-
+    
   } else {
     let NuevoUser = await userContr.recuperaUserPorId(hash.userId);
     let viajes = await viajContr.recuperaViajes();
     
+    
     req.session.email = NuevoUser.email;
     req.session.password = NuevoUser.password;
     req.session.nombre = NuevoUser.nombre;
-
-    let formatoViaje = viajes
-    formatoViaje.map(a => {
-      return {
+    
+    let formatoViaje = viajes.map(a => {
+      return{
         destino: a.destino,
-        imagen: a.imagen,
+        imagen: RUTA + a.imagen,
         precio: a.precio,
         descuento: a.descuento,
-        fechaSalida: moment(a.fechaSalida).subtract(10, 'days').calendar()
-      }
-    })
-
-    res.render('index', {
+        fechaSalida: moment(a.fechaSalida).subtract(10, 'days').calendar()}});
+     res.render('index', {
       NuevoUser,
       formatoViaje
     }) ;
