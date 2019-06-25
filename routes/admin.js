@@ -10,24 +10,42 @@ router.post('/convert/:id', async function(req,res){
   let id = req.params.id;
   let admin;
   let usuarios;
-  
+  console.log('REQUEST BODY ::::::',req.body.checkAdmin);
 
-  if (req.body.checkadmin = 'on'){
+  if (req.body.checkAdmin == 'on'){
     
     admin = true;
     await userContr.hazloAdmin(admin,id);
     
-  }else{
+  }else if (req.body.checkAdmin == undefined)  {
     admin = false;
     await userContr.hazloAdmin(admin,id);
     
   }
   
+  
+  usuarios = await userContr.devuelveUsuarios();
+
+  res.render('users', {
+    usuarios
+  } );  
+
+
+})
+router.post('/activa/user/:id',async function(req,res){
+  let id = req.params.id;
+  let usuarios;
+ 
+  if(req.body.active == 'on'){
+     await userContr.activaUsuario(id);
+  }else if(req.body.active == undefined)  {
+     await userContr.desactivaUsuario(id);
+  }
   usuarios = await userContr.devuelveUsuarios();
   res.render('users', {
     usuarios
-  } ); 
-
+  } );
+  
 
 })
 

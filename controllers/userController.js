@@ -72,7 +72,15 @@ async function activaUsuario(userId){
    )
 }
 
+async function desactivaUsuario(userId){
+   await mod.user.update({activate:false},
+                         {where:{id:userId}}   
+
+   )
+}
+
 module.exports = {
+     desactivaUsuario,
      activaUsuario,
      hazloAdmin,
      actualizaPassword,  

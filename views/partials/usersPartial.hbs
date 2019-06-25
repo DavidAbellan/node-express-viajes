@@ -8,13 +8,24 @@
              <p>{{email}}</p>
              <button type="submit" >Elimina</button>
         </form>
+
              <form method="POST" action='/admin/convert/{{id}}'>       
              <input type="checkbox" onchange="submit()" name="checkAdmin"
                   {{#if administrador}}
                       checked
                   {{/if}}
                       />Admin
-             </form>
+             </form>  
+
+            <form method="POST" action='/admin/activa/user/{{id}}'>       
+                <input type="checkbox" onchange="submit()" name="active"
+                    {{#if activate}}
+                        checked
+                     {{/if}}
+                      />Activo  
+
+
+            </form> 
          
 
         {{/each}}
