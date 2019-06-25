@@ -7,6 +7,7 @@ var logger = require('morgan');
 let hbs = require('hbs');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var viajeRouter = require('./routes/viaje');
 var adminRouter = require('./routes/admin');
 var flash = require('connect-flash');
 var winston = require('./config/winston'); 
@@ -41,6 +42,7 @@ app.use(express.static(path.join(__dirname, 'uploads')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/admin', adminRouter);
+app.use('/travel', viajeRouter);
 
 
 // catch 404 and forward to error handler

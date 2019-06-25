@@ -1,6 +1,16 @@
 let mod = require("../models");
 let cript = require("bcrypt");
 
+async function hazloAdmin(admin,userId){
+   if(admin){
+      return await mod.user.update({administrador : true},
+                                   {where:{id:userId}});
+   } else {
+      return await mod.user.update({administrador : false},
+                                   {where:{id:userId}});
+   }
+}
+
 async function insertaUsuario(usuario){
    let result = await encriptar(usuario.password);
    usuario.password = result; 
@@ -49,11 +59,7 @@ async function borraUsuario(userId){
    await mod.user.destroy({where:{id : userId}});
 }
 async function actualizaPassword(user,nuevoPassword){
-   console.log('USERERERERER:',user);
-   console.log('newPAss ; ',nuevoPassword);
-
    let newPass = await encriptar(''+nuevoPassword)
-   console.log('newPAss ; ',newPass);
    await mod.user.update( {password:newPass},
                           {where:{ id : user.id}}
                      );
@@ -61,7 +67,7 @@ async function actualizaPassword(user,nuevoPassword){
 }
 
 module.exports = {
-
+     hazloAdmin,
      actualizaPassword,  
      borraUsuario,
      devuelveUsuarios,

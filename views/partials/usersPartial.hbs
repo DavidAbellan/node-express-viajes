@@ -2,19 +2,19 @@
 
         {{#each usuarios}}
     
-    <form method="POST" action="/admin/users/borrar/{{id}}">
-         <li class="list-group-item">
+        <form method="POST" action="/admin/users/borrar/{{id}}">
+             <li class="list-group-item">
              <h1>{{nombre}}</h1>
              <p>{{email}}</p>
-             
-                   <button type="submit" >Elimina</button>
-                    
-             <input type="checkbox"
-             {{#if administrador}}
-             checked
-             {{/if}}
-             />admin
-    </form>
+             <button type="submit" >Elimina</button>
+        </form>
+             <form method="POST" action='/admin/convert/{{id}}'>       
+             <input type="checkbox" onchange="submit()" name="checkAdmin"
+                  {{#if administrador}}
+                      checked
+                  {{/if}}
+                      />Admin
+             </form>
          
 
         {{/each}}

@@ -1,0 +1,47 @@
+  {{#with viaje}}
+<form method="POST" action="/travel/modify/{{id}}">
+   <div class="col 8">
+        <label>
+            <p> Destino : 
+                <input name="destino" type="text" value="{{destino}}"> 
+            </p>
+            
+        </label>
+         <label>
+            <p> Precio :
+                <input name="precio" type="text" value="{{precio}}"> 
+            </p>
+            
+        </label>
+         <label>
+            <p> Descuento :
+                <input name="descuento" type="text" value="{{descuento}}"> 
+            </p>
+            
+        </label>
+         <label>
+            <p> Fecha de Salida :
+                <input name="fechaSalida" type="date" value="{{fechaSalida}}"> 
+            </p>
+            
+        </label>
+        <label>
+            <p> Fecha de Vuelta :
+                <input name="fechaVuelta" type="date" value="{{fechaVuelta}}"> 
+            </p>
+            
+        </label>
+        <button type="submit">Modifica</button>
+
+   </div>
+    </form>
+       <form>
+        {{#each imagenes}}
+           <div>
+               <img alt="..." src={{nombre}}>
+          </div>
+        {{/each}}
+        </form>
+
+</div>
+{{/with}}

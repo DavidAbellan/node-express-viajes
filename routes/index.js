@@ -7,20 +7,22 @@ var userContr = require('../controllers/userController');
 var imgContr = require('../controllers/imageController');
 var moment = require('moment');
 var winston =require('../config/winston')
+const puerto = 'http://localhost:3000/';
 
 
 
 /* GET home page. */
 router.get('/viaje/:id', async function (req, res) {
-    const puerto = 'http://localhost:3000/';
     let viaje = await viajContr.encuentraViajePorId(req.params.id);
     let imagenes = await imgContr.recuperarImagenes(req.params.id);
-    console.log(imagenes);    
     let formatoViaje = viaje ;
-    formatoViaje.imagen = 'http://localhost:3000/' + viaje.imagen
-    imagenes = imagenes.map((i)=>{i.imagen = puerto + i.imagen})
+    let isAdmin = req.session.admin;
+    formatoViaje.imagen = 'http://localhost:3000/' + viaje.imagen;
+    imagenes = imagenes.map((i)=>{i.imagen = puerto + i.imagen});
+    
 
   res.render('detalle', {
+    isAdmin,
     formatoViaje,
     imagenes
   })

@@ -7,7 +7,30 @@ let imgContr = require('../controllers/imageController');
 let userContr = require('../controllers/userController')
 var upload = require('../config/multer');
 
+router.post('/convert/:id', async function(req,res){
+  let id = req.params.id;
+  let admin;
+  let usuarios;
+  
 
+  if (req.body.checkadmin = 'on'){
+    
+    admin = true;
+    await userContr.hazloAdmin(admin,id);
+    
+  }else{
+    admin = false;
+    await userContr.hazloAdmin(admin,id);
+    
+  }
+  
+  usuarios = await userContr.devuelveUsuarios();
+  res.render('users', {
+    usuarios
+  } );
+
+
+})
 
 router.post('/insert',upload.array('file',10), async function (req, res) {
     if(!req.files) {

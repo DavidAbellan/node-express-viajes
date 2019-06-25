@@ -48,6 +48,7 @@ router.post('/login',  async function (rq, rs) {
   let pass = rq.body.password;
   let formatoViaje = viajes.map(a => {
     return {
+      id : a.id,
       destino: a.destino,
       imagen: RUTA + a.imagen,
       precio: a.precio,
@@ -66,6 +67,7 @@ router.post('/login',  async function (rq, rs) {
     rq.session.email = mail;
     rq.session.password = pass;
     rq.session.nombre = NuevoUser[0].nombre;
+    rq.session.admin = NuevoUser[0].administrador;
 
     rs.render('index', {
       NuevoUser: NuevoUser[0],

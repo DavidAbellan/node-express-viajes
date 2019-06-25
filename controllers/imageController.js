@@ -12,10 +12,16 @@ async function recuperarImagenes(idviaje){
     let imgPrin = await mod.image.findAll({where : {viajeId : idviaje}})
     return imgPrin;
 }
+async function borrarImagenesViaje(id){
+    return await mod.image.destroy({where:{viajeId : id}});
+
+}
+
 
 
 
 module.exports = {
+    borrarImagenesViaje,
     recuperarImagenes,
     insertarImagenes,
     recuperarImagenPrincipal
