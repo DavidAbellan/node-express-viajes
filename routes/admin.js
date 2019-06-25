@@ -5,7 +5,6 @@ let path = require('path');
 let viajContr = require('../controllers/viajeController');
 let imgContr = require('../controllers/imageController');
 let userContr = require('../controllers/userController')
-var upload = require('../config/multer');
 
 router.post('/convert/:id', async function(req,res){
   let id = req.params.id;
@@ -27,26 +26,12 @@ router.post('/convert/:id', async function(req,res){
   usuarios = await userContr.devuelveUsuarios();
   res.render('users', {
     usuarios
-  } );
+  } ); 
 
 
 })
 
-router.post('/insert',upload.array('file',10), async function (req, res) {
-    if(!req.files) {
-      return res.status(500).send('No has seleccionado un archivo valido');
-  
-    }
-        let travel = req.body ;
-        travel.imagen = req.files[0].filename
-        let viaje = await viajContr.insertaViaje(travel);
-        let idviaje = viaje.id;
-        await imgContr.insertarImagenes(req.files,idviaje);
-        
-    
-    res.redirect('/')
-  
-  })
+
 
   router.get('/', (req, res) => {
     res.render('insertaViaje');

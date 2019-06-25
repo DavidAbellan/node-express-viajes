@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+var upload = require('../config/multer');
+
 
 var imgControl = require('../controllers/imageController');
 var viajeControl = require('../controllers/viajeController');
@@ -46,6 +48,22 @@ router.post('/modify/:id', async function(req,res) {
     await viajeControl.actualizaViaje(viaje,id);
     res.redirect('/');
 })
+
+router.post('/insert',upload.array('file',10), async function (req, res) {
+    if(!req.files) {
+      return res.status(500).send('No has seleccionado un archivo valido');
+  
+    }
+        let travel = req.body ;
+        travel.imagen = req.files[0].filename
+        let viaje = await viajeControl.insertaViaje(travel);
+        let idviaje = viaje.id;
+        await imgControl.insertarImagenes(req.files,idviaje);
+        
+    
+    res.redirect('/')
+  
+  })
 
 
 

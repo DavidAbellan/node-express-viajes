@@ -12,7 +12,7 @@ const puerto = 'http://localhost:3000/';
 
 
 /* GET home page. */
-router.get('/viaje/:id', async function (req, res) {
+router.get('/detalle/:id', async function (req, res) {
     let viaje = await viajContr.encuentraViajePorId(req.params.id);
     let imagenes = await imgContr.recuperarImagenes(req.params.id);
     let formatoViaje = viaje ;

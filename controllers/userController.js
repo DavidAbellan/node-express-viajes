@@ -65,8 +65,15 @@ async function actualizaPassword(user,nuevoPassword){
                      );
 
 }
+async function activaUsuario(userId){
+   await mod.user.update({activate:true},
+                         {where:{id:userId}}   
+
+   )
+}
 
 module.exports = {
+     activaUsuario,
      hazloAdmin,
      actualizaPassword,  
      borraUsuario,

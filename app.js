@@ -42,7 +42,7 @@ app.use(express.static(path.join(__dirname, 'uploads')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/admin', adminRouter);
-app.use('/travel', viajeRouter);
+app.use('/viaje', viajeRouter);
 
 
 // catch 404 and forward to error handler

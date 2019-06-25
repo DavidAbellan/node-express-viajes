@@ -63,7 +63,7 @@ router.post('/login',  async function (rq, rs) {
 
     rs.redirect('/');
 
-  } else {
+  } else if (NuevoUser[0].activate) {
     rq.session.email = mail;
     rq.session.password = pass;
     rq.session.nombre = NuevoUser[0].nombre;
@@ -73,6 +73,9 @@ router.post('/login',  async function (rq, rs) {
       NuevoUser: NuevoUser[0],
       formatoViaje
     })
+  } else {
+    rs.redirect('/'
+    )
   }
 
 })
@@ -116,7 +119,7 @@ router.get('/activate/now/:hash', async function (req,res) {
   } else {
     let NuevoUser = await userContr.recuperaUserPorId(hash.userId);
     let viajes = await viajContr.recuperaViajes();
-    
+    await userContr.activaUsuario(hash.id);
     
     req.session.email = NuevoUser.email;
     req.session.password = NuevoUser.password;
