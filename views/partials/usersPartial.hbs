@@ -9,15 +9,15 @@
              <button type="submit" >Elimina</button>
         </form>
 
-             <form method="POST" action='/admin/convert/{{id}}'>       
+        <form method="POST" action='/admin/convert/{{id}}'>       
              <input type="checkbox" onchange="submit()" name="checkAdmin"
                   {{#if administrador}}
                       checked
                   {{/if}}
                       />Admin
-             </form>  
+       </form>  
 
-            <form method="POST" action='/admin/activa/user/{{id}}'>       
+       <form method="POST" action='/admin/activa/user/{{id}}'>       
                 <input type="checkbox" onchange="submit()" name="active"
                     {{#if activate}}
                         checked
@@ -25,7 +25,7 @@
                       />Activo  
 
 
-            </form> 
+      </form> 
          
 
         {{/each}}
@@ -33,4 +33,4 @@
 
 
 </ul>
-<a href="">Salir...</a>
+<a href="/">Salir...</a>

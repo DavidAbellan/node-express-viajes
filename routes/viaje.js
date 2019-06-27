@@ -7,18 +7,19 @@ var imgControl = require('../controllers/imageController');
 var viajeControl = require('../controllers/viajeController');
 
 
-///mover el insert y el detalle aquI
+
 
 router.post('/edita/:id', async function(req,res){
    
     if (req.body.edita){
         let viaje = await viajeControl.encuentraViajePorId(req.params.id);
-        let imagenes = await imgControl.recuperarImagenes(req.params.id);
+        let imagenes = viaje.fotos;
         imagenes = imagenes.map(i => { 
             return{
-                nombre :'/uploads/'+ i.images,
-                idviaje : i.viajeid
-
+                nombre :'http://localhost:3000/'+ i.images,
+                viajeId : i.viajeId,
+                id : i.id
+                
             }
         })
         res.render('editViaje',{
@@ -32,10 +33,35 @@ router.post('/edita/:id', async function(req,res){
         res.redirect('/');
 
     }
+
     
     
 
 })
+router.post('/borra/imagen/:id', async function(req,res){
+    console.log('REQ PARAMAS :::', req.params);
+    let imagen = await imgControl.recuperaImagenPorId(req.params.id);
+    console.log('IIMAGEN::::',imagen);
+    let idviaje = imagen.viajeId;
+    console.log('ID VIAJE @:::::',idviaje);
+    await imgControl.borraImagen(req.params.id);
+    let viaje = await viajeControl.encuentraViajePorId(idviaje);
+    let imagenes = await imgControl.recuperarImagenes(idviaje);
+    imagenes = imagenes.map(i => { 
+        return{
+            nombre :'http://localhost:3000/'+ i.images,
+            viajeId : i.viajeId,
+            id : i.id
+
+        }
+    })
+        
+        res.render('editViaje',{
+        imagenes,      
+        viaje
+         })
+
+  })
 router.post('/modify/:id', async function(req,res) {
     let viaje ={
         destino : req.body.destino,

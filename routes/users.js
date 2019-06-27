@@ -28,8 +28,8 @@ router.post('/form', async function (req, res) {
     let NuevoUser = await userContr.insertaUsuario(req.body);
     let hash = await confirm.confirma(NuevoUser.id);
     req.session.email = NuevoUser.email;
-    req.session.password = NuevoUser.password;
     req.session.nombre = NuevoUser.nombre;
+    req.session.admin = NuevoUser.administrador;
     await emailContr.emailConfirmacion(NuevoUser,hash);
     res.redirect('/')
   } else {
@@ -45,7 +45,6 @@ router.post('/login',  async function (rq, rs) {
 
   let viajes = await viajContr.recuperaViajes();
   let mail = rq.body.email;
-  let pass = rq.body.password;
   let formatoViaje = viajes.map(a => {
     return {
       id : a.id,
@@ -58,14 +57,13 @@ router.post('/login',  async function (rq, rs) {
   })
 
   let NuevoUser;
-  NuevoUser = await userContr.recuperaUser(rq.body.email, rq.body.password);
+  NuevoUser = await userContr.recuperaMail(rq.body.email);
   if (NuevoUser === undefined) {
 
     rs.redirect('/');
 
   } else if (NuevoUser[0].activate) {
     rq.session.email = mail;
-    rq.session.password = pass;
     rq.session.nombre = NuevoUser[0].nombre;
     rq.session.admin = NuevoUser[0].administrador;
 
@@ -81,7 +79,6 @@ router.post('/login',  async function (rq, rs) {
 })
 
 router.get('/logoff', async function(req,res){
-  req.flash('success_msg', 'Vuelve Pronto')
    req.session.destroy(function (err) {
        if (err) {
            res.send(err)
@@ -122,8 +119,8 @@ router.get('/activate/now/:hash', async function (req,res) {
     await userContr.activaUsuario(hash.id);
     
     req.session.email = NuevoUser.email;
-    req.session.password = NuevoUser.password;
     req.session.nombre = NuevoUser.nombre;
+    req.session.admin = NuevoUser.administrador;
     
     let formatoViaje = viajes.map(a => {
       return{

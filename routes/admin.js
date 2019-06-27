@@ -10,7 +10,6 @@ router.post('/convert/:id', async function(req,res){
   let id = req.params.id;
   let admin;
   let usuarios;
-  console.log('REQUEST BODY ::::::',req.body.checkAdmin);
 
   if (req.body.checkAdmin == 'on'){
     
@@ -49,13 +48,14 @@ router.post('/activa/user/:id',async function(req,res){
 
 })
 
+  
 
 
-  router.get('/', (req, res) => {
+router.get('/', (req, res) => {
     res.render('insertaViaje');
   
   })
-  router.post('/users/borrar/:id', async function (req,res){
+router.post('/users/borrar/:id', async function (req,res){
     await userContr.borraUsuario(req.params.id);
     let usuarios = await userContr.devuelveUsuarios();
     
@@ -66,7 +66,7 @@ router.post('/activa/user/:id',async function(req,res){
 
   })
 
-  router.get('/users', async function (req , res)  {
+router.get('/users', async function (req , res)  {
     let usuarios = await userContr.devuelveUsuarios();
     
     res.render('users', {

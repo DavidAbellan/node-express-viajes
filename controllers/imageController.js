@@ -16,11 +16,20 @@ async function borrarImagenesViaje(id){
     return await mod.image.destroy({where:{viajeId : id}});
 
 }
+async function borraImagen(idimagen){
+    return await mod.image.destroy({where:{id:idimagen}});
+
+}
+async function recuperaImagenPorId(idfoto){
+    return await mod.image.findOne( {where:{id:idfoto} } );
+}
 
 
 
 
 module.exports = {
+    recuperaImagenPorId,
+    borraImagen,
     borrarImagenesViaje,
     recuperarImagenes,
     insertarImagenes,

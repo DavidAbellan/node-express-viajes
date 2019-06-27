@@ -3,7 +3,6 @@ var router = express.Router();
 let path = require('path');
 
 var viajContr = require('../controllers/viajeController');
-var userContr = require('../controllers/userController');
 var imgContr = require('../controllers/imageController');
 var moment = require('moment');
 var winston =require('../config/winston')
@@ -28,6 +27,7 @@ router.get('/detalle/:id', async function (req, res) {
   })
 });
 router.get('/', async function (req, res, next) {
+  console.log('NUEVO SUSEREARAR:::',req.session);
   
   let viajes = await viajContr.recuperaViajes();
   let formatoViaje = viajes
@@ -42,17 +42,24 @@ router.get('/', async function (req, res, next) {
         };    
     })
     
+   
   if (req.session.nombre === undefined) {
     res.render('index', {
       formatoViaje
     });
 
   } else {
-    let NuevoUsuario = await userContr.recuperaUser(req.session.email, req.session.password);
-
+    let NuevoUser = {
+      nombre : req.session.nombre,
+      email : req.session.email,
+      administrador : req.session.admin
+    }
+    
+    
+    
     res.render('index', {
       formatoViaje,
-      NuevoUsuario
+      NuevoUser 
     });
   }
 });

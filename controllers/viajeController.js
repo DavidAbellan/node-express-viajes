@@ -8,8 +8,12 @@ async function insertaViaje(viaje){
      return await mod.viaje.create(viaje)
 }
 
-async function encuentraViajePorId(id){
-     return await mod.viaje.findByPk(id) 
+async function encuentraViajePorId(idviaje){
+     return await mod.viaje.findByPk(idviaje, {include :[{
+          model : mod.image, 
+          as : 'fotos'
+
+     }]}) 
 }
 async function borrarViaje(viajeId){
      return await mod.viaje.destroy({where:{id : viajeId}});

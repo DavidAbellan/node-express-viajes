@@ -1,47 +1,36 @@
   {{#with viaje}}
-<form method="POST" action="/viaje/modify/{{id}}">
-   <div class="col 8">
-        <label>
-            <p> Destino : 
-                <input name="destino" type="text" value="{{destino}}"> 
-            </p>
-            
-        </label>
-         <label>
-            <p> Precio :
-                <input name="precio" type="text" value="{{precio}}"> 
-            </p>
-            
-        </label>
-         <label>
-            <p> Descuento :
-                <input name="descuento" type="text" value="{{descuento}}"> 
-            </p>
-            
-        </label>
-         <label>
-            <p> Fecha de Salida :
-                <input name="fechaSalida" type="date" value="{{fechaSalida}}"> 
-            </p>
-            
-        </label>
-        <label>
-            <p> Fecha de Vuelta :
-                <input name="fechaVuelta" type="date" value="{{fechaVuelta}}"> 
-            </p>
-            
-        </label>
-        <button type="submit">Modifica</button>
+  <form method="POST" action="/viaje/modify/{{id}}">
+      <div class="col 8">
+          <label>
+              <input name="destino" value="{{destino}}" class="form-control" type="text">
+          </label>
+          <label>
+              <input name="precio" value="{{precio}}" class="form-control" type="text">
+          </label>
+              <input name="descuento" value="{{descuento}}" class="form-control" type="text">
+          <label>
+              <input name="fechaSalida" type="date" value="{{fechaSalida}}" class="form-control" type="text">
+          </label>
+          <label>
+              <input name="fechaVuelta" type="date" value="{{fechaVuelta}}" class="form-control" type="text">
+          </label>
 
-   </div>
-    </form>
-       <form>
-        {{#each imagenes}}
-           <div>
-               <img alt="..." src={{nombre}}>
+          <button type="submit">Modifica</button>
+
+      </div>
+
+  </form>
+  {{/with}}
+      {{#each imagenes}}
+      <div class="col 2">
+          <div class="row">
+          <form method="POST" action="/viaje/borra/imagen/{{id}}">   
+          <img alt="..." src={{nombre}} style="height: 100px; width:100px;" class="img-thumbnail">
+          <button type="submit" class="eliminar">Eliminar</button>
+          </form>
           </div>
-        {{/each}}
-        </form>
-
-</div>
-{{/with}}
+          
+      </div>
+      
+      {{/each}}
+ 

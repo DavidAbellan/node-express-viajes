@@ -10,7 +10,7 @@ module.exports =(sequelize,dataTypes) => {
 
     })
     viaje.associate = function(models){
-       models.viaje.hasMany(models.image);
+       models.viaje.hasMany(models.image,{as:"fotos"});
        models.viaje.hasOne(models.image, {as: "principal"})
     }
 
