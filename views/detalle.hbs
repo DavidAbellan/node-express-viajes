@@ -1,38 +1,48 @@
- <script>
-    $('.carousel').carousel()
- </script>
-<div class="card bg-dark text-white">
-{{#with formatoViaje}}
-  <div class="card-img-overlay">
-    <h5 class="card-title">{{destino}}</h5>
-       {{!--  falta el archivo util.js --}}
+ 
 
-      <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
-          <div class="carousel-inner">
-            {{#each imagenes}}
-
-               <div class="carousel-item active">
-                  <img src={{images}} class="d-block w-100" alt="...">
-               </div>
-            {{/each}}
-    
-          </div>
-     </div>
+{{#with viaje}}
 
     </div>   
+      <h5 class="card-title">{{destino}}</h5>
       <p class="card-text">Salimos el {{fechaSalida}} y volvemos {{fechaVuelta}} </p>
       <p class="card-text">Precio {{precio}} con {{descuento}}% de descuento</p>
     </div>
- </div>
-{{/with}}
- {{#if isAdmin}}
- <div>
-      <form method="POST" action="/viaje/edita/{{formatoViaje.id}}">
+
+  <div class="carousel-one carousel">
+  <span class="prev"><</span>
+  <div class="container">
+    <div class="wrapper">
+       {{#each viaje.fotos}}
+      <div class="content"><div> <img src="/uploads/{{images}}"></div>
+       {{/each}}
+       </div>
+     </div>
+    </div>
+  </div>
+  <span class="next">></span>
+</div>
+  {{/with}}
+  {{#if admin}}
+    <div>
+       <form method="POST" action="/viaje/edita/{{viaje.id}}">
          <button type="submit" name="borra" value="true">Borrar Viaje</button>
          <button type="submit" name="edita" value="true">Edita Viaje</button>
-
-
-      </form> 
- </div>
+       </form> 
+    </div>
  {{/if}}
+  {{#if user}}
+   <form method="GET" action="/users/anade/{{viaje.id}}">
+     <button type="submit">Reserva</button>
+   </form>
+   
+  {{/if}}
+
+
+
+ 
+ 
+ 
+
+
+
 

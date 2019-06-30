@@ -1,4 +1,4 @@
-
+let models = require('../models')
 
 module.exports =(sequelize,dataTypes) => {
     let usuario = sequelize.define('user',{
@@ -12,8 +12,7 @@ module.exports =(sequelize,dataTypes) => {
     activate :{type: dataTypes.BOOLEAN, defaultValue: false},
     
    })
-   
-
+  
 return usuario;
 }
 

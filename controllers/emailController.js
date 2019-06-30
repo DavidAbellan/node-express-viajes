@@ -19,7 +19,6 @@ async function enviarIdaMail(usuario){
   
   
       }))
-     console.log('USERRRRR :: ',usuario[0]);
    let message = {
         to: 'BarryelSucio@gmail.COM',
         subject : 'Hola  ' + usuario[0].nombre,

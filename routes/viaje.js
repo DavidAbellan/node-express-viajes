@@ -39,11 +39,8 @@ router.post('/edita/:id', async function(req,res){
 
 })
 router.post('/borra/imagen/:id', async function(req,res){
-    console.log('REQ PARAMAS :::', req.params);
     let imagen = await imgControl.recuperaImagenPorId(req.params.id);
-    console.log('IIMAGEN::::',imagen);
     let idviaje = imagen.viajeId;
-    console.log('ID VIAJE @:::::',idviaje);
     await imgControl.borraImagen(req.params.id);
     let viaje = await viajeControl.encuentraViajePorId(idviaje);
     let imagenes = await imgControl.recuperarImagenes(idviaje);

@@ -4,6 +4,7 @@ var confirm = require('../controllers/confirmController');
 var userContr = require('../controllers/userController');
 var viajContr = require('../controllers/viajeController');
 var emailContr = require('../controllers/emailController');
+let paginacion = require('../helpers/page');
 var flash = require('connect-flash');
 var moment = require('moment');
 var loginMid = require('../middleware/Logged')
@@ -27,9 +28,12 @@ router.post('/form', async function (req, res) {
   if (coincidencia.length == 0) {
     let NuevoUser = await userContr.insertaUsuario(req.body);
     let hash = await confirm.confirma(NuevoUser.id);
+    if (NuevoUser.activate){
     req.session.email = NuevoUser.email;
     req.session.nombre = NuevoUser.nombre;
     req.session.admin = NuevoUser.administrador;
+    }
+    localStorage.setItem('page','0'); 
     await emailContr.emailConfirmacion(NuevoUser,hash);
     res.redirect('/')
   } else {
@@ -42,8 +46,19 @@ router.post('/form', async function (req, res) {
 
 
 router.post('/login',  async function (rq, rs) {
+  let carritoCompra = 0
+  let numerototal =await paginacion.numeroPagina() 
+  numerototal -= 1;
+  localStorage.setItem('page','0'); 
+  localStorage.setItem('paginas',numerototal) 
+  let pagina = Number(localStorage.getItem('page'))
+  let viajes = await paginacion.recuperaViajes(pagina);
+  if(numerototal > pagina){
+    numerototal = false;
+  } else {
+    numerototal = true;
+  }
 
-  let viajes = await viajContr.recuperaViajes();
   let mail = rq.body.email;
   let formatoViaje = viajes.map(a => {
     return {
@@ -55,7 +70,6 @@ router.post('/login',  async function (rq, rs) {
       fechaSalida: moment(a.fechaSalida).subtract(10, 'days').calendar()
     }
   })
-
   let NuevoUser;
   NuevoUser = await userContr.recuperaMail(rq.body.email);
   if (NuevoUser === undefined) {
@@ -66,14 +80,23 @@ router.post('/login',  async function (rq, rs) {
     rq.session.email = mail;
     rq.session.nombre = NuevoUser[0].nombre;
     rq.session.admin = NuevoUser[0].administrador;
+    rq.session.carritoCompra = carritoCompra;
+    if (!carritoCompra){
+      carritoCompra=0;
+    } else {
+      carritoCompra = req.session.carritoCompra.length  ;
+    }
+    
 
     rs.render('index', {
+      pagina,
+      numerototal,
       NuevoUser: NuevoUser[0],
-      formatoViaje
+      formatoViaje,
+      carritoCompra
     })
   } else {
-    rs.redirect('/'
-    )
+    rs.redirect('/')
   }
 
 })
@@ -98,7 +121,6 @@ router.post('/sendpass', async function(req,res){
 
   } else {
     emailContr.enviarIdaMail(user)
-    console.warn('hecho!', 'Se ha enviado un correo con tu password a' + req.body.email)
     res.redirect('/')
   }
 })
@@ -107,7 +129,8 @@ router.post('/sendpass', async function(req,res){
 
 router.get('/activate/now/:hash', async function (req,res) {
   let hash = await confirm.existe(req.params.hash);
-  
+  localStorage.setItem('page','0'); 
+ 
   if (hash === undefined){
     let error= req.flash(error);
     res.redirect('/');
@@ -132,11 +155,35 @@ router.get('/activate/now/:hash', async function (req,res) {
      res.render('index', {
       NuevoUser,
       formatoViaje
-    }) ;
+    }) ; }
+})
 
+router.get('/carrito', async function(req,res){
+  let carritoCompra;
+  if (!req.session.carritoCompra){
+     carritoCompra= false  
+  } else {
+    carritoCompra =  req.session.carritoCompra
+   }
+  let total = 0;    
+  for(viaje of carritoCompra){
+    total +=  viaje.precio
+  } 
 
+  res.render('carrito',{
+    carritoCompra,
+    total
+  })
+})
+
+router.get('/anade/:id',async function(req,res){
+  let viaje = await viajContr.encuentraViajePorId(req.params.id);
+  if(!req.session.carritoCompra){
+    req.session.carritoCompra =[{ viaje: viaje.destino, precio : viaje.precio }]
+  } else {
+    req.session.carritoCompra.push({ viaje: viaje.destino, precio : viaje.precio })
   }
-
+  res.redirect('/');
 })
 
 

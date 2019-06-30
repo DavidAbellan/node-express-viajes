@@ -1,0 +1,12 @@
+{{#if carritoCompra}}
+  {{#each carritoCompra}}
+     <p>a</p><h2> {{ viaje }} </h2> 
+     <p>{{ precio }} Dollars</p> 
+  {{/each}}
+      <p>----------------------------</p> 
+      <p>TOTAL  {{total}} </p>
+
+{{else}}
+ <h2>Actualmente no tiene viajes contratados</h2>
+
+{{/if}}
