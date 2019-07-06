@@ -5,8 +5,8 @@ let ruta = 'http://localhost:3000/users/activate/now/';
 let path = require('path');
 
 async function enviarIdaMail(usuario){
-   let nuevoPassword = usuario[0].id + Math.random()*1000 ;
-   await userContr.actualizaPassword(usuario[0],nuevoPassword);
+   let nuevoPassword = usuario.id + Math.random()*1000 ;
+   await userContr.actualizaPassword(usuario,nuevoPassword);
    config.transporter.use('compile',hbs ({
         viewEngine : {
           extName: '.hbs',
@@ -21,7 +21,7 @@ async function enviarIdaMail(usuario){
       }))
    let message = {
         to: 'BarryelSucio@gmail.COM',
-        subject : 'Hola  ' + usuario[0].nombre,
+        subject : 'Hola  ' + usuario.nombre,
         template : 'mail',
         context : {
           empresa : 'Viajes Ajes',

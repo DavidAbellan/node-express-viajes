@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
      integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay"
       crossorigin="anonymous">
+      <link rel="icon" type="image/png" href="http://www.icons101.com/icon_ico/id_74152/Travel.ico">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
        crossorigin="anonymous">
@@ -16,6 +17,43 @@
         
    </head>
   <body>
+
+{{#if session.userId}}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+       <h3>Bienvenido  {{session.nombre}}</h3>
+      {{#if session.administrador}}
+       <a class="navbar-brand" href="/admin/insertviaje"><button>Insertar Viajes</button></a>
+       <a class="navbar-brand" href="/admin/users"><button>Gestión de usuarios</button></a>
+     {{/if}}
+        <div class="navbar-brand"> 
+           <a href="/users/logoff"> Log Off </a>
+           <div style="display: flex; flex-flow:column unwrap">
+           <a href="/users/carrito"> <i class="fas fa-shopping-cart"></i> </a>
+           <h5>{{session.carritoCompra.length}}</h5>
+           </div>
+       </div>
+ </nav>      
+{{else}}
+<div class="container-fluid">
+ <form class="form-inline" method="POST" action="/users/login">
+     <div class="form-group mb-2">
+       <label for="staticEmail2" class="sr-only">Email</label>
+       <input name="email" type="text" class="form-control-plaintext" id="staticEmail2" >
+       <p id="aviso"></p>
+    </div>
+ <div class="form-group mx-sm-3 mb-2">
+    <label for="inputPassword2" class="sr-only">Password</label>
+    <input name="password" type="password" class="form-control" id="inputPassword2" placeholder="Password">
+  </div>
+  <button type="submit" class="btn btn-primary mb-2">Log in</button>
+<a style="margin-left:3em;" href="/users/form" >regístrate</a>
+<a style="margin-left:3em;" href="/users/forgot" >Olvidé mi password...</a>
+</form>
+</div>
+{{/if}}
+
+
     
     {{{body}}}
   </body>

@@ -6,7 +6,7 @@ let mod = require('../models');
 async function recuperaViajes(page){
     let pageSize = 6;
     let offset = page * pageSize;
-    let limit = offset + pageSize; 
+    let limit = pageSize; 
     return await mod.viaje.findAll( {
          offset,
          limit} 

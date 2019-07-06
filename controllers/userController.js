@@ -28,7 +28,7 @@ function desencriptar(pass,password){
 
 async function recuperaMail (mail) {
      
-   return await mod.user.findAll({
+   return await mod.user.findOne({
       where: {
          email: mail
       }

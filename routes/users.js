@@ -4,7 +4,6 @@ var confirm = require('../controllers/confirmController');
 var userContr = require('../controllers/userController');
 var viajContr = require('../controllers/viajeController');
 var emailContr = require('../controllers/emailController');
-let paginacion = require('../helpers/page');
 var flash = require('connect-flash');
 var moment = require('moment');
 var loginMid = require('../middleware/Logged')
@@ -25,16 +24,17 @@ router.post('/form', async function (req, res) {
 
   let coincidencia = await userContr.recuperaMail(req.body.email);
 
-  if (coincidencia.length == 0) {
+  if (!coincidencia) {
     let NuevoUser = await userContr.insertaUsuario(req.body);
     let hash = await confirm.confirma(NuevoUser.id);
     if (NuevoUser.activate){
     req.session.email = NuevoUser.email;
     req.session.nombre = NuevoUser.nombre;
     req.session.admin = NuevoUser.administrador;
-    }
-    localStorage.setItem('page','0'); 
-    await emailContr.emailConfirmacion(NuevoUser,hash);
+  }
+  
+ 
+  await emailContr.emailConfirmacion(NuevoUser,hash);
     res.redirect('/')
   } else {
 
@@ -46,55 +46,20 @@ router.post('/form', async function (req, res) {
 
 
 router.post('/login',  async function (rq, rs) {
-  let carritoCompra = 0
-  let numerototal =await paginacion.numeroPagina() 
-  numerototal -= 1;
-  localStorage.setItem('page','0'); 
-  localStorage.setItem('paginas',numerototal) 
-  let pagina = Number(localStorage.getItem('page'))
-  let viajes = await paginacion.recuperaViajes(pagina);
-  if(numerototal > pagina){
-    numerototal = false;
-  } else {
-    numerototal = true;
-  }
-
+  let pagina = rq.params.pagina
   let mail = rq.body.email;
-  let formatoViaje = viajes.map(a => {
-    return {
-      id : a.id,
-      destino: a.destino,
-      imagen: RUTA + a.imagen,
-      precio: a.precio,
-      descuento: a.descuento,
-      fechaSalida: moment(a.fechaSalida).subtract(10, 'days').calendar()
-    }
-  })
-  let NuevoUser;
-  NuevoUser = await userContr.recuperaMail(rq.body.email);
-  if (NuevoUser === undefined) {
+
+  let nuevoUser = await userContr.recuperaMail(rq.body.email);
+  if (!nuevoUser) {
 
     rs.redirect('/');
 
-  } else if (NuevoUser[0].activate) {
+  } else if (nuevoUser.activate) {
     rq.session.email = mail;
-    rq.session.nombre = NuevoUser[0].nombre;
-    rq.session.admin = NuevoUser[0].administrador;
-    rq.session.carritoCompra = carritoCompra;
-    if (!carritoCompra){
-      carritoCompra=0;
-    } else {
-      carritoCompra = req.session.carritoCompra.length  ;
-    }
-    
-
-    rs.render('index', {
-      pagina,
-      numerototal,
-      NuevoUser: NuevoUser[0],
-      formatoViaje,
-      carritoCompra
-    })
+    rq.session.nombre = nuevoUser.nombre;
+    rq.session.administrador =nuevoUser.administrador;
+    rq.session.userId = nuevoUser.id;
+    rs.redirect('/')
   } else {
     rs.redirect('/')
   }
@@ -116,8 +81,10 @@ router.get('/forgot', function(req,res){
 })
 router.post('/sendpass', async function(req,res){
   let user = await userContr.recuperaMail(req.body.email);
-  if (user === undefined){
+  if (!user){
     req.flash('error', 'el usuario no existe');
+    res.render('password');
+
 
   } else {
     emailContr.enviarIdaMail(user)
@@ -128,35 +95,26 @@ router.post('/sendpass', async function(req,res){
 
 
 router.get('/activate/now/:hash', async function (req,res) {
+  
   let hash = await confirm.existe(req.params.hash);
-  localStorage.setItem('page','0'); 
+  
  
-  if (hash === undefined){
+  if (!hash){
     let error= req.flash(error);
     res.redirect('/');
     
     
   } else {
     let NuevoUser = await userContr.recuperaUserPorId(hash.userId);
-    let viajes = await viajContr.recuperaViajes();
     await userContr.activaUsuario(hash.id);
     
     req.session.email = NuevoUser.email;
     req.session.nombre = NuevoUser.nombre;
     req.session.admin = NuevoUser.administrador;
-    
-    let formatoViaje = viajes.map(a => {
-      return{
-        destino: a.destino,
-        imagen: RUTA + a.imagen,
-        precio: a.precio,
-        descuento: a.descuento,
-        fechaSalida: moment(a.fechaSalida).subtract(10, 'days').calendar()}});
-     res.render('index', {
-      NuevoUser,
-      formatoViaje
-    }) ; }
-})
+   
+    res.redirect('/');
+  }})
+
 
 router.get('/carrito', async function(req,res){
   let carritoCompra;
