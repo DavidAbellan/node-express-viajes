@@ -24,7 +24,7 @@
     "nodemailer": "^6.2.1",
     "nodemailer-express-handlebars": "^3.0.0",
     "nodemon": "^1.19.1",
-    "sequelize": "^5.8.7",
+    "sequelize": "^5.15.1",
     "winston": "^3.2.1"
   }
 }
